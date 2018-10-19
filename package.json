@@ -1,0 +1,45 @@
+{
+  "name": "dwapijs-practiceregistry",
+  "version": "0.0.1",
+  "description": "dwapi.js practice registry",
+  "scripts": {
+    "test": "jest --forceExit --coverage --verbose --detectOpenHandles",
+    "watch-test": "npm run test -- --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dwapijs/practiceregistry.git"
+  },
+  "keywords": [
+    "dwapi"
+  ],
+  "author": "Koske Kimutai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dwapijs/practiceregistry/issues"
+  },
+  "homepage": "https://github.com/dwapijs/practiceregistry#readme",
+  "dependencies": {
+    "dwapijs-sharedkernel": "github:dwapijs/sharedkernel",
+    "lodash": "^4.17.11",
+    "reflect-metadata": "^0.1.12",
+    "sqlite3": "^4.0.2",
+    "typeorm": "^0.2.7",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/faker": "^4.1.4",
+    "@types/jest": "^23.3.5",
+    "@types/lodash": "^4.14.117",
+    "@types/node": "^10.11.7",
+    "@types/sequelize": "^4.27.28",
+    "@types/uuid": "^3.4.4",
+    "chai": "^4.2.0",
+    "faker": "^4.1.0",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.4",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.3"
+  }
+}
