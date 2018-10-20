@@ -11,7 +11,7 @@ export class Partner extends AggregateRoot {
     name: string;
 
     @ManyToMany(type => Facility, f => f.partners, {cascade: true, eager: true})
-    @JoinTable({name: "partner_facilities"})
+    @JoinTable({name: "partner_facility"})
     facilites: Facility[];
 
     constructor(shortName: string, name: string) {
@@ -20,7 +20,7 @@ export class Partner extends AggregateRoot {
         this.name = name;
     }
 
-    addFacility(facility: Facility) {
+    assignFacility(facility: Facility) {
         if (!this.facilites) {
             this.facilites = [];
         }

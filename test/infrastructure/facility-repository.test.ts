@@ -16,25 +16,25 @@ describe("Facility Repository Base", () => {
 
     const partners = [
         new Partner("UMB", "UMB"),
+        new Partner("DFID", "DFID"),
     ];
 
     const facilties = [
         new Facility(20001, "KDH")
     ];
 
-    partners[0].addFacility(facilties[0]);
+    partners[0].assignFacility(facilties[0]);
 
     beforeAll(async () => {
         fs.unlink(dbPath, (err) => {
                 if (err) {
                     console.log(err);
-                    throw err;
                 }
                 console.log("db deleted !");
             }
         );
         const connection = await createConnection({
-            logging: true,
+            logging: false,
             type: "sqlite",
             database: dbPath,
             entities: ["./src/core/model/*.ts"],
@@ -47,10 +47,19 @@ describe("Facility Repository Base", () => {
         await partnerRepository.createBatch(partners);
     });
 
-    test("should load facilities with partner", async () => {
+    test("should load facility with partner", async () => {
         const facility = await facilityRepository.get(facilties[0].id);
         expect(facility.partners.length > 0);
         console.log(`${facility}`);
         facility.partners.forEach((p) => console.log(`> ${p}`));
+    });
+
+    test("should load all facilities with partner", async () => {
+        const facilities = await facilityRepository.getAll();
+        facilities.forEach(f => expect(f.partners.length > 0));
+        facilities.forEach((f) => {
+            console.log(`${f}`);
+            f.partners.forEach(p => console.log(`> ${p}`));
+        });
     });
 });

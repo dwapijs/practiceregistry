@@ -25,9 +25,9 @@ describe("Partner Repository Base", () => {
         new Facility(10003, "AAR")
     ];
 
-    partners[0].addFacility(facilties[0]);
-    partners[1].addFacility(facilties[1]);
-    partners[1].addFacility(facilties[2]);
+    partners[0].assignFacility(facilties[0]);
+    partners[1].assignFacility(facilties[1]);
+    partners[1].assignFacility(facilties[2]);
 
     beforeAll(async () => {
         fs.unlink(dbPath, (err) => {
