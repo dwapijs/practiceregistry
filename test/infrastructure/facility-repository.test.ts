@@ -7,6 +7,7 @@ import { Partner } from "../../src/core/model/partner";
 import { Facility } from "../../src/core/model/facility";
 import { IFacilityRepository } from "../../src/core/interfaces/ifacility-repository";
 import { FacilityRepository } from "../../src/infrastructure/facility-repository";
+import { FacilityUploadHistory } from "../../src/core/model/facility-upload-history";
 
 
 describe("Facility Repository Base", () => {
@@ -45,6 +46,18 @@ describe("Facility Repository Base", () => {
 
         await facilityRepository.createBatch(facilties);
         await partnerRepository.createBatch(partners);
+    });
+
+    test("should save facility with Uploads", async () => {
+        const newFacility = new Facility(22, "New Facility");
+        newFacility.updateUploadHistory(new FacilityUploadHistory(new Date(2018, 0, 1), 200, newFacility));
+        newFacility.updateUploadHistory(new FacilityUploadHistory(new Date(2018, 1, 1), 206, newFacility));
+
+        await facilityRepository.create(newFacility);
+        const facility = await facilityRepository.get(newFacility.id);
+        expect(facility.uploads.length > 0);
+        console.log(`${facility}`);
+        facility.uploads.forEach((p) => console.log(`> ${p}`));
     });
 
     test("should load facility with partner", async () => {
