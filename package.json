@@ -24,7 +24,9 @@
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "reflect-metadata": "^0.1.12",
+    "typedi": "^0.8.0",
     "typeorm": "^0.2.7",
+    "typeorm-typedi-extensions": "^0.2.1",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { createConnection } from "typeorm";
+import { createConnection, useContainer } from "typeorm";
 import * as fs from "fs";
 import { IPartnerRepository } from "../../src/core/interfaces/ipartner-repository";
 import { PartnerRepository } from "../../src/infrastructure/partner-repository";
@@ -8,6 +8,8 @@ import { Facility } from "../../src/core/model/facility";
 import { IFacilityRepository } from "../../src/core/interfaces/ifacility-repository";
 import { FacilityRepository } from "../../src/infrastructure/facility-repository";
 import { FacilityUploadHistory } from "../../src/core/model/facility-upload-history";
+import Container from "typedi";
+import { clearDb, initDbConnection } from "../test-initializer";
 
 
 describe("Facility Repository Base", () => {
@@ -27,28 +29,17 @@ describe("Facility Repository Base", () => {
     partners[0].assignFacility(facilties[0]);
 
     beforeAll(async () => {
-        fs.unlink(dbPath, (err) => {
-                if (err) {
-                    console.log(err);
-                }
-                console.log("db deleted !");
-            }
-        );
-        const connection = await createConnection({
-            logging: false,
-            type: "sqlite",
-            database: dbPath,
-            entities: ["./src/core/model/*.ts"],
-            synchronize: true
-        });
-        partnerRepository = new PartnerRepository(Partner, connection);
-        facilityRepository = new FacilityRepository(Facility, connection);
+        await clearDb();
+        useContainer(Container);
+        await initDbConnection(["./src/core/model/*.ts"]);
+        partnerRepository = Container.get(PartnerRepository);
+        facilityRepository = Container.get(FacilityRepository);
 
         await facilityRepository.createBatch(facilties);
         await partnerRepository.createBatch(partners);
     });
 
-    test("should save facility with Uploads", async () => {
+    it("should save facility with Uploads", async () => {
         const newFacility = new Facility(22, "New Facility");
         newFacility.updateUploadHistory(new FacilityUploadHistory(new Date(2018, 0, 1), 200, newFacility));
         newFacility.updateUploadHistory(new FacilityUploadHistory(new Date(2018, 1, 1), 206, newFacility));
@@ -60,19 +51,22 @@ describe("Facility Repository Base", () => {
         facility.uploads.forEach((p) => console.log(`> ${p}`));
     });
 
-    test("should load facility with partner", async () => {
+    it("should load facility with partner", async () => {
         const facility = await facilityRepository.get(facilties[0].id);
         expect(facility.partners.length > 0);
         console.log(`${facility}`);
         facility.partners.forEach((p) => console.log(`> ${p}`));
     });
 
-    test("should load all facilities with partner", async () => {
+    it("should load all facilities with partner", async () => {
         const facilities = await facilityRepository.getAll();
         facilities.forEach(f => expect(f.partners.length > 0));
         facilities.forEach((f) => {
             console.log(`${f}`);
             f.partners.forEach(p => console.log(`> ${p}`));
         });
+    });
+    afterAll(async () => {
+        await clearDb();
     });
 });
